@@ -1,0 +1,18 @@
+I installed DBeaver by just unzipping the dbeaver-ce-x.x.x-win32.win32.x86_64.zip file (Windows 64 bit zip arcive). I did NOT install the version that comes with Java and I did NOT install the Installer version (exe)
+To uninstall, just delete the directory; D:\tools\DBeaver
+Then unpin the DBeaver icon from the Windows Start menu.
+
+I cannot update the DBeaver version, instead just uninstall and reinstall.
+
+NOTE: do not add the version number to the directory name, this way the current DBeave icons and jdbc connections will still work when upgrading to the new version without making any changes to them. 
+
+NOTE: autocommit is turned off, so need to click 'Commit' button if want to commit any db changes.
+
+Deleting the D:\tools\DBeaver directory does not remove any settings or database configurations. These are stored in the directory: C:\Users\alan\.dbeaver4
+
+I tested the following free database clients and found DBeaver to be the best for both MySQL and Oracle databases:
+1) Oracle SQL Developer - does not allow inserting a row of data in a table thru the UI for MySQL databases, only can do it for Oracle databases. For MySQL, need to write SQL statements.
+2) Squirrel SQL - crappy interface. couldnt get it to work.
+3) DbVisualizer - The free version does not allow inserting a row of data in a table thru the UI, need to either write SQL statements or buy the Pro version for $200.
+4) DBeaver - interface is similar to eclipse. easy to install DB drivers. Can insert, edit and delete a row of data in a table thru the UI. 
+

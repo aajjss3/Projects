@@ -1,0 +1,129 @@
+NOTE: cannot pick a directory to install SourceTree into, it auto installs into 'C:\Users\alan\AppData\Local\SourceTree' and C:\Users\alan\AppData\Local\Atlassian\... and I cant change it. 
+
+NOTE: ONE TIME STEP - add to my windows PATH the location to the git.exe thats installed with the SourceTree installation.
+
+NOTE: When cloning always enter the repo's url as https://<github-user-id>@github.com/example/example.git (enter the git username and the '@' symbol prior to the github domain name).
+
+NOTE: if a local project is managed by GIT it will have a '.git' directory under the projects root directory.
+
+Under Settings... Advanced make sure both of these are checked (enabled): Automatically Refresh and Refresh remote status
+
+Using SourceTree with 2 or more different GIT accounts sometimes causes an issue - when i try to clone a repo I get 'Repository not found' error, even though the repo exists. To solve this issue, remove all of Sourcetrees saved accounts and passwords. In Sourcetree... Tools... Options... Authentications - delete all accounts and passwords. If I am unable to delete a password in sourcetree then go to Windows Credentials (in windows... Control Panel... User Accounts... Credential Manager... Windows Credentials... General Credentials) and see if there is a GIT credential. If so, delete it. Then try cloning the repo again. When cloning always enter the repo's url as https://user@github.com/example/example.git
+If all else fails... in sourcetree click on the Terminal button and type: git config --system --unset credential.helper
+
+
+NOTE: In Sourcetree, if a REMOTE branch is deleted by someone else, it will still show up in my SourcTree under Remote/origin. This is true even if you right click on origin and select ‘fetch from origin’ or ‘pull from origin’. To fix this select the Fetch icon from the top menu and make sure the following is checked ‘Prune tracking branches no longer present on remote(s)
+
+
+To Delete Sourcetree
+--------------------
+	go to windows Settings... App... App & Feature and uninstall Sourcetree
+	go to C:\Users\alan\AppData\Local\Atlassian and delete all Sourcetree folders
+	go to C:\Users\alan\AppData\Local and delete the Sourcetree folder.
+	
+	
+To Install Sourcetree
+---------------------
+	Download sourcree, install it and then to authenticate select 'Bitbucket' account and enter my credentials (see 1Password) to finish the install - select defaults. For the last step of the install, make to select 'Set Global author details for Git' and enter my GitHub credentials (username: aajjss, email: aajjss3@gmail.com). Unselect Help improve sourcetree. 
+
+	To configure Authentication, go to... Sourcetree... Tools... Options... Authentication... 
+		-Accounts - aajjss3@github.com
+		-Git Saved Password - github.com
+		-delete any other 'accounts' and 'saved passwords' besides these. 
+	
+	
+TO INTEGRATE GIT (using SOURCETREE) with  STS PROJECT	
+-----------------------------------------------------
+	
+NOTE: WHEN CHECKING OUT A REPO FROM GIT IT REQUIRES AN EMPTY LOCAL DIRECTORY. AND WHEN CREATING A NEW PROJECT IN SPRING TOOL SUITE IT REQUIRES AN EMPTY LOCAL DIRECTORY. THIS IS A CATCH 22. I HAVENT FOUND A CLEAN SOLUTION TO THIS. WHAT I DO IS CREATE A SINGLE NEW PROJECT DIRECTORY. THEN I CREATE A NEW PROJECT IN STS IN THAT DIRETORY AND THEN MOVE ALL FILES OUT OF THAT DIRECORY. THEN I CREATE A NEW GIT PROJECT IN THAT SAME DIRECTORY. THEN I MOVE THE STS PROJECT FILES BACK INTO THAT DIRECTORY. THIS PROCESS IS DETAILED BELOW...
+
+log into website; https://bitbucket.org with aajjss3 account.  click home icon and then click on 'Repositories' (in left nav)... click 'Create Repository' (in upper right corner). call the repository the name of the project.  this will create a URL, copy the url to clipboard (ex...
+												https://aajjss3@bitbucket.org/aajjss3/practicerestservice.git)
+												https://aajjss3@bitbucket.org/aajjss3/practicewebapplication.git
+
+Use STS to either create a new project or import an existing project (see document 'create new Spring Boot project in STS.txt').
+
+Then copy all files created by STS into a backup directory and delete all files from the local project. 
+
+Then go to SourceTree and click the plus (+) icon next to the tab. then click the 'Remote' tab... 'Refresh'... the newly added repo should show up. then click 'Clone' link next to the repo to clone. 
+Select 'Advanced Options' and for the checkout branch select 'develop' (or whatever branch you want to check out). 
+For the local directory - select the local project directory created above when i created the STS project, (with no files in it). 
+For 'Local Folder' - leave the default value of: [Root]
+then click CLONE, this will create the necessary .git directory and files locally. 
+
+then move back all the sts project files that were backed up (see above), back into the project directory. 
+
+go back into sourcetree and all those files will now show up, commit them.
+
+In eclipse, the GitHub branch should be displayed next to the project name in the navigator view. Eclipse/STS will show the project as managed by GIT if it has the GIT branch name next to the project in the Navigator window and it will also show files that have changed from the repo version with the > indicator next to the filename.
+If it doesnt show any Git branch then right click on project.... Team... Share Project... make sure the checkbox for the Project/Location/Repository is selected and click Finish.
+If it shows the wrong Git Branch then right click on project.... Team... Switch To... and either select the branch or enter the branch name.
+	
+	
+For existing remote Repositories/code that ARE already existing locally on my laptop
+-----------------------------------------------------------------------------------
+	In Sourcetree select the 'Local' tab. then go to windows explorer and drag the following 2 folders 'Practice Rest Service', 'Practice Web Service' into sourcetree's Local Repositories empty right pane. Then right click on each repo and select 'Open'. This will create a new tab for each existing repositories. 
+
+
+To Delete a GIT repository
+----------------------------
+This is non-intuitive. see https://confluence.atlassian.com/bitbucket/delete-a-repository-221449698.html
+
+
+.gitignore file contents
+------------------------
+.settings/
+target/
+bin/
+.classpath
+.factorypath
+.project
+
+
+FIX For the Issue Where Sourcetree Opens A Tab To My Home Directory (C:\Users\alan) when I Start Sourcetee
+------------------------------------------------------------------------------------------------------
+go to my home directory (C:\Users\alan) and delete a .git directory if it exists.
+
+
+Create a PULL REQUEST in GitHub
+-------------------------------
+-Base - is the branch you want to merge you changes into (ex. Master)
+-Compare - is the branch you made your changes in (ex. Develop)
+
+
+Create A PULL REQUEST in Sourcetree
+-----------------------------------
+- In sourcetree, right click on the branch and select... 'Create Pull Request'
+- this automatically opens a browser (where the URL is https://github.com/Tallwave/FIT_Service/compare/... )
+- In the browser, make sure I select the correct branch to merge into (its the branch on the left) (right now i should merge into 'Master' branch but ideally it should be 'Develop' branch)
+- Add Reviewers
+- click 'Create Pull Request'
+- wait for approval from reviewers
+- Merge branch
+- Click 'Delete Branch' button. 
+
+another way to create a PULL REQUEST...
+-open a browser and go to the GITHUB url for the project (ex. https://github.com/Tallwave/FIT_Service/tree/master)
+-then select the branch you want to create a pull request for (by clicking on the Button that says 'Branch:xxx' and selecting the branch under the 'Branches' tab).
+-once the branch you want to great a pull request for is selected, click on the button that says 'New Pull Request'
+
+
+To Create a New Branch in GitHub
+---------------------------------
+Go to website:  https://github.com/Tallwave/FIT_Service/tree/master
+Click the dropdown arrow on the button 'Branch xxxx'
+enter a new name to use for the branch that i want to create (to prevent issues dont use non alpanumeric characters other than dash -)
+make sure the branch its being created from is correct (usually its the 'DEVELOP' branch)
+click 'Create Branch: <name entered>
+
+The go to Sourcetree and go to REMOTES... Origin... and right click and select 'fetch from origin'.  (this is the list of remote branches on the server)
+the new branch should show up.
+double click on the new branch and select 'Checkout New Branch'... OK. - this will checkout the new branch and place it under BRANCHES (this is the list of local branches i have on my laptop)
+
+
+GITHUB Projects
+--------------
+cards and issues
+cannot delete an issue (can only close it)
+isses are bigger scope than cards
+

@@ -1,0 +1,161 @@
+STS 4.0 uses Eclipse 4.9
+
+NOTE: some personal preferences are stored in the workspace-sts/.metadata directory (example: themes, run configurations, etc)
+NOTE: in STS to switch to a different Branch (GitHub branch)... right click on project and select Team... Switch To... New Branch... enter the new branch name to switch to.
+
+Uninstall STS
+-----------
+To uninstall STS just delete the directory D:\tools\sts-xxx
+
+
+Install STS
+-------------
+Install STS by unzipping the STS zip file under d:\tools.  The workspace directory to use is: D:\projects\workspace-sts
+
+Go to STS... Help... Check For Updates
+
+changes the following from defaults...
+- modify SpringToolSuite.ini file (do this while STS is closed down) ->  see section  "To allocate more memory for Spring Tool 4 or eclipse"
+- close the Outline pane.
+- switch to dark theme (see section below in this file called 'Change to Dark Theme')
+- modify the e4-dark_win.css file. (see the section below 'Change to Dark Theme')
+- Windows... Show View... Other... General... Navigator
+- move the 'Boot Dashboard' pane to the lower right window.
+- Windows... Preferences... Run/Debug... console... unselect "Limit Console Output"
+- Windows... Show View... Console
+
+- NO LONGER NEEDED => if using annotation processing then see the 2 sections below. NOTE: this is probably NOT needed in STS 4.0 or newer, first check if its not automatically configured in a project in STS once you do a maven update.
+
+	This is probably not needed in STS 4.0 or newer...  Install 'm2e-apt' into STS  - needed for MapStruct or any other API that uses Annotation Processing
+	------------------------------------------------------------------------------------------------------------------------------------------------------
+	NOTE: if not using annotation processing for any of the STS workspace projects then dont need to add this plugin
+	STS... Help... Eclipse Marketplace... for Find: enter 'm2e-apt' and click Go. Then install 'm2e-apt 1.5.0' plugin (or whatever the latest version is).
+
+	This is probably not needed in STS 4.0 or newer...  To enable Annotation Processing for a specific project (done on a project by project basis) 
+	-----------------------------------------------------------------------------------------------------------------------------------------------
+	first install the 'm2e-apt' plugin, see above
+	right click on the project ... Properties... Maven... Annotation Processing... and click 'Enable project specific settings' and click 'Automatically configure JDT APT' (NOTE: do this on a project level by project level, not on a global level)
+	Then right click on the project... Maven... Update Project
+	NOTE: the above steps should automatically change the following, verify that it did.. If it doesnt, then manually change the following...
+	1)right click on the project... Properties... Java Compiler... Annotation Processing... the checkbox for 'Enable project specific setting 'should be checked and the generated source directory should be target\generated-sources\annotations.
+	2)right click on the project... Properties... Java Compiler... Annotation Processing... Factory Path... the checkbox for 'Enable project specific setting' should be checked and there should be a mapstruct jar added to the list of Plug-ins and JARs.
+
+
+To allocate more memory for Spring Tool 4 or eclipse...
+------------------------------------------------------
+open file; C:\tools\sts-4.2.1.RELEASE\SpringToolSuite4.ini
+modify the -Xms and -Xmx parameters
+add the -XX:PermSize and -XX:MaxPermSize paramters
+replace/add the following in the file...
+-XX:PermSize=256m
+-XX:MaxPermSize=512m
+-Xms256m
+-Xmx4G
+  
+If an individual application that is run within eclipse requires a lot of memory then do the following...
+as an example: the Run Configurations... 'ela-app run all tests locally' and the Run Configuration... 'ela-app dev - AWS database' require a lot of memory to run. To increase their memory do the following for each...
+Run... Run Configuration... select the particular run configuration... if its a 'Spring Boot App' run configuration then select the 'Arguments' tab... 'VM arguments' window... and enter -Xmx3g
+under 'VM arguments' . if instead its a 'Maven Build' run configuration then select 'JRE' tab... 'VM arguments' window and enter -Xmx3g under 'VM arguments'.
+ 
+
+To import/add an existing Maven project (project with an existing pom.xml)
+-----------------------------------------------------------------------
+copy the project's code to the D:\projects\workspace-sts\<PROJECT>. make sure all eclipe directories and files are DELETED. (delete the files/directories: .settings, .factorypath, .classpath, .project, target)
+
+STS... File... import... Maven... Existing Maven project...
+Right click on the project... Maven... Update Project
+
+To create a Run profile... right click on the project... Run As... Run Configurations... Spring Boot App... New Launch Configuration... choose Profile: 'local' and UNCHECK 'Enable JMX'
+
+if the project using annotation processing then see the section above called 'To enable Annotation Processing for a specific project'...
+
+
+
+To Create a New SpringBoot application
+--------------------------------------
+File... New... Spring... Spring Starter Project
+Packaging: Jar
+Language: Java
+choose Maven
+change the following;
+	Name
+	Group
+	Artifact
+	Version
+	Description
+	Package
+
+Choose... Web... Spring Web
+Choose.... Ops... Spring Boot Actuator
+Choose... Developer Tools... Spring Boot DevTools and Validation
+If using JPA and/or Hibernate - choose... SQL... Spring Data JPA
+If using a Database - choose... SQL... appropriate database
+If using database refactoring/migration once go to production - choose... SQL... Flyway
+If creating a Web Application with Thymeleaf -  choose... Template Engines... Thymeleaf
+
+If JPA was choosen then start the database and create a database shell.
+If using MySQL then copy the databse dependency tag '<version>8.0.11</version>' from my practice pom.xml into the new projects pom.xml
+create an application-local.properties file and copy the database properties from my practice pom.xml into it.
+create a Run configuration in STS and use the local profile
+test the application runs and starts up successfully.
+
+
+
+IDE Develop Tools
+-----------------
+Add the Springs Developer Tools jar to the POM.xml file - If developing in an IDE it will automatically restart tomcat whenever files on the classpath change (JRebel uses dynamic class reloading which is even better but JRebel costs $500). Just by adding this jar file to the pom, if the application is running in Tomcat in an IDE, it will auto restart when a file is changed. No additional configuration is required.  
+
+Gradle
+-----
+If using Gradle install the plugin: Buildship Gradle Integration 2.0
+
+
+Install a new Java JRE
+----------------------
+in windows - download and install a JRE and then go to windows system environment variables and change JAVA_HOME and PATH.
+then open up STS and go to... 
+	Windows... Preferences... Java... Installed JRE's and Add the new JRE installed and set it as the default.
+	Windows... Preferences... Java... Compiler... and select the new jre in the 'Compiler Compliance level'.
+
+
+Proxy Server
+------------
+If going thru a proxy server then... 
+Windows... Preferences... General... Network Connections
+Active Provider: 'Manual' (NOTE: if not going thru proxy sever then set to 'Native' and make sure all entries for Proxy Entities and Proxy bypass are unselected) 
+Proxy entities: add appropriate proxy servers.
+
+Notes
+-----
+If using maven evern time I change the pom.xml i need to manually update the project... right click on the project... Maven... Update Project...
+If using Gradle every time i change the gradle script i need to manually update the project.... right click on the project.... Gradle... Refresh project
+
+Change to Dark Theme (default is Theme: Light) - Go to Windows... Preferences... General... Appearance... Theme: 'Dark' (default is 'Light')
+
+There is an issue when switching to a Dark theme in Eclipse/STS - the scrolling in the console window is very slow. The following change doesnt fix the issue but it helps...
+shut down STS and edit the file; D:\tools\sts-x.x.x.RELEASE\plugins\org.eclipse.ui.themes_xxx\css\e4-dark_win.css
+change -> swt-scrollbar-themed: true; 
+to -> swt-scrollbar-themed: false;
+(NOTE: this sets the scroll bars as white and not dark) 
+Make sure the dark theme is selected (see above)
+Restart STS
+verify that the console window scroll bars are white and not dark.
+
+
+If any of these issues start to occur
+------------------------------------
+1)start experiencing issues with the console hanging(STS will hang anytime you start the springboot app and click on the console tab it hangs for a long time)
+or
+2)the auto reload feature of spring developer tools stops working 
+or
+3) get a generic 'An error had occured. Please see the log file' messagebox when starting a springboot application
+
+if any of the above occurs then go to the directory; D:\projects\sts-workspace and delete the whole .metadata directory. (see this posting about what to do: https://stackoverflow.com/questions/15333825/an-error-has-occured-please-see-log-file-eclipse-juno)
+Steps...
+    Quit eclipse
+    GO to your workspace and delete .metadata folder
+    open eclipse with the same workpath ( You will see as a new workspace )
+    right click import > General > Existing Projects into Workspace > next > Select root directory -> browse to your current workspace and select it.
+    I will see all your all projects and then hit OK again.
+    I will need to reconfigure my workspace for any custom changed i made. this includes setting up the database connections i created in the Data Source Explorer
+
